@@ -1,6 +1,7 @@
 package com.kyn.problem_solve;
 
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class Q1 {
     public static void main(String[] args) {
@@ -25,28 +26,20 @@ public class Q1 {
     }
 
     public static int solution(int[] schedules, int[][] timelogs, int startday) {
-        int answer = 0;
-        for (int i = 0; i < schedules.length; i++) {
-            int counter = 0;
-            for (int j = 0; j < timelogs[i].length; j++) {
-                if (j + startday < 6 || (j + startday > 7 && j + startday < 13)) {
-                    if (timeCalculator(timelogs[i][j]) <= timeCalculator(schedules[i] + 10)) {
-                        counter++;
-                    }
-                } else {
-                    counter++;
-                }
-
-                if (counter == 7)
-                    answer++;
-            }
-
-        }
-        return answer;
+        return (int) IntStream.range(0, schedules.length)
+                .filter(i -> IntStream.range(0, timelogs[i].length)
+                        .filter(j -> {
+                            int currentDay = (j + startday) % 7;
+                            if (currentDay != 0 && currentDay != 6) {
+                                return timeCalculator(timelogs[i][j]) <= timeCalculator(schedules[i] + 10);
+                            }
+                            return true;
+                        })
+                        .count() >= 7)
+                .count();
     }
 
     public static int timeCalculator(int wantTime) {
         return (wantTime / 100) * 60 + wantTime % 100;
-
     }
 }
