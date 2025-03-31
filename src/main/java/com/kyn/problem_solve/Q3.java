@@ -1,7 +1,7 @@
 package com.kyn.problem_solve;
 
-import java.util.Map;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class Q3 {
@@ -22,7 +22,10 @@ public class Q3 {
         Arrays.sort(bill);
 
         while (IntStream.range(0, 2).anyMatch(i -> bill[i] > wallet[i])) {
-            bill[IntStream.range(0, 2).reduce((i, j) -> bill[i] > bill[j] ? i : j).getAsInt()] /= 2;
+            if (bill[0] > bill[1])
+                bill[0] /= 2;
+            else
+                bill[1] /= 2;
             answer++;
             Arrays.sort(bill);
         }
